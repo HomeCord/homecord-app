@@ -1,0 +1,34 @@
+{
+  "name": "homecord",
+  "version": "2.0.0",
+  "description": "Promote your Discord Server with a specialised landing page, featuring highlighted messages, events, forum threads, and more!",
+  "main": "index.js",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HomeCord/homecord-app.git"
+  },
+  "keywords": [
+    "discord",
+    "discord-app",
+    "discord-bot",
+    "starboard"
+  ],
+  "author": "TwilightZebby",
+  "license": "SEE LICENSE IN https://github.com/TwilightZebby/license/blob/main/license.md",
+  "bugs": {
+    "url": "https://github.com/HomeCord/homecord-app/issues"
+  },
+  "homepage": "https://github.com/HomeCord/homecord-app#readme",
+  "dependencies": {
+    "@discordjs/collection": "^2.1.1",
+    "@discordjs/core": "^2.4.0",
+    "@discordjs/rest": "^2.6.0",
+    "@discordjs/ws": "^2.0.4",
+    "discord-api-types": "^0.38.35"
+  }
+}
