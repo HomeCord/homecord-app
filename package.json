@@ -1,7 +1,7 @@
 {
   "name": "homecord",
   "version": "2.0.0",
-  "description": "Promote your Discord Server with a specialised landing page, featuring highlighted messages, events, forum threads, and more!",
+  "description": "Promote your Discord Server with a specialised landing page - featuring highlighted messages, events, forum threads, and more!",
   "main": "index.js",
   "type": "module",
   "private": true,
@@ -29,6 +29,7 @@
     "@discordjs/core": "^2.4.0",
     "@discordjs/rest": "^2.6.0",
     "@discordjs/ws": "^2.0.4",
-    "discord-api-types": "^0.38.35"
+    "discord-api-types": "^0.38.35",
+    "mongoose": "^9.0.0"
   }
 }

@@ -2,6 +2,7 @@ import { GatewayDispatchEvents, PresenceUpdateStatus } from '@discordjs/core';
 import { InteractionType, MessageType } from 'discord-api-types/v10';
 import { isChatInputApplicationCommandInteraction, isContextMenuApplicationCommandInteraction, isMessageComponentButtonInteraction, isMessageComponentSelectMenuInteraction } from 'discord-api-types/utils';
 import * as fs from 'node:fs';
+import * as Mongoose from 'mongoose';
 
 import { DiscordClient, UtilityCollections } from './Utility/utilityConstants.js';
 import { handleSlashCommand } from './Handlers/Commands/slashCommandHandler.js';
@@ -10,6 +11,7 @@ import { handleButton } from './Handlers/Interactions/buttonHandler.js';
 import { handleSelect } from './Handlers/Interactions/selectHandler.js';
 import { handleAutocomplete } from './Handlers/Interactions/autocompleteHandler.js';
 import { handleModal } from './Handlers/Interactions/modalHandler.js';
+import { GuildConfig } from './Mongoose/Models.js';
 
 
 
@@ -117,6 +119,7 @@ DiscordClient.once(GatewayDispatchEvents.Ready, async () => {
 //  Debugging and Error Logging
 process.on('warning', console.warn);
 process.on('unhandledRejection', console.error);
+DiscordClient.on(GatewayDispatchEvents.RateLimited, console.warn);
 
 
 
@@ -180,6 +183,64 @@ DiscordClient.on(GatewayDispatchEvents.InteractionCreate, async ({ data: interac
     else if ( interaction.type === InteractionType.ModalSubmit ) { await handleModal(interaction, api); }
     // Others
     else { console.info(`****Unrecognised or new unhandled Interaction Type triggered: ${interaction.type}`); }
+
+    return;
+});
+
+
+
+
+
+
+
+
+
+// *******************************
+//  Discord Guild Create Event
+DiscordClient.on(GatewayDispatchEvents.GuildCreate, async ({ data: guildData, api }) => {
+    // Make sure we are only handling this if it's triggered due to adding the App to a Guild, NOT due to an outage or anything like that!
+    let now = Date.now();
+    let timeSinceJoin = now - Date.parse(guildData.joined_at);
+    if ( timeSinceJoin > 600000 ) { return; } // Not a new join
+
+    if ( guildData.unavailable ) { return; } // Guild Data unavailable due to Discord API outage
+
+
+    // Setup Database entry
+    try {
+        await GuildConfig.create({
+            guild_id: guildData.id
+        });
+    }
+    catch (err) {
+        console.error(err);
+    }
+
+    return;
+});
+
+
+
+
+
+
+
+
+
+// *******************************
+//  Discord Guild Delete Event
+DiscordClient.on(GatewayDispatchEvents.GuildDelete, async ({ data: guildData, api }) => {
+    // Make sure we are only handling this if it's triggered due to the App being removed from the Guild, NOT due to an outage or anything like that!
+    if ( guildData.unavailable ) { return; }
+
+
+    // Remove data
+    try {
+        await GuildConfig.deleteOne({ guild_id: guildData.id });
+    }
+    catch (err) {
+        console.error(err);
+    }
 
     return;
 });

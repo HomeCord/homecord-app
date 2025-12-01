@@ -2,14 +2,15 @@ import { REST } from '@discordjs/rest';
 import { WebSocketManager } from '@discordjs/ws';
 import { GatewayIntentBits, Client } from '@discordjs/core';
 import { Collection } from '@discordjs/collection';
-import { DISCORD_TOKEN } from '../config.js';
+import * as Mongoose from 'mongoose';
+import { DISCORD_TOKEN, MONGO_CONNECTION_URI } from '../config.js';
 
 
 // REST Manager
 const DiscordRest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
 
 /** Required Intents */
-const RequestedIntents = GatewayIntentBits.Guilds | GatewayIntentBits.GuildIntegrations | GatewayIntentBits.GuildMessages | GatewayIntentBits.MessageContent | GatewayIntentBits.GuildMessageReactions;
+const RequestedIntents = GatewayIntentBits.Guilds | GatewayIntentBits.GuildIntegrations | GatewayIntentBits.GuildMessages | GatewayIntentBits.MessageContent | GatewayIntentBits.GuildMessageReactions | GatewayIntentBits.GuildScheduledEvents;
 
 /** WebSocket Manager for interacting with Discord API. Only exporting so I can use `.connect()` in index file */
 const DiscordGateway = new WebSocketManager({
@@ -18,7 +19,9 @@ const DiscordGateway = new WebSocketManager({
     rest: DiscordRest,
 });
 
-DiscordGateway.connect();
+DiscordGateway.connect().catch(console.error);
+
+Mongoose.connect(MONGO_CONNECTION_URI).catch(console.error);
 
 
 // *******************************
@@ -74,4 +77,33 @@ export const UtilityCollections = {
 export const DefaultResponseHeaders = {
     'Content-Type': 'application/json',
     Authorization: `Bot ${DISCORD_TOKEN}`
+};
+
+/** ENUMs */
+export const ActivityLevel = {
+    Disabled: "DISABLED",
+    VeryLow: "VERY_LOW",
+    Low: "LOW",
+    Medium: "MEDIUM",
+    High: "HIGH",
+    VeryHigh: "VERY_HIGH"
+};
+
+export const MessagePrivacyLevel = {
+    Private: "PRIVATE",
+    Anonymous: "ANONYMOUS",
+    Public: "PUBLIC"
+};
+
+export const HomeCordLimits = {
+    // Showcaseable items
+    MaxShowcasedMessages: 5, // Messages from Text or Public_Thread Channels
+    MaxShowcasedAnnouncements: 5, // Messages from Announcement Channels
+    MaxShowcasedEvents: 5,
+    MaxShowcasedChannels: 6,
+    MaxShowcasedThreads: 5,
+    // Block List
+    MaxBlockedChannels: 10,
+    MaxBlockedCategories: 10,
+    MaxBlockedRoles: 10
 };
