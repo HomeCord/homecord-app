@@ -118,4 +118,16 @@ module.exports = {
     SETTINGS_MODAL_ACTIVITY_THRESHOLD_EVENT_DESCRIPTION: `Set the threshold of activity that HomeCord should check for Scheduled Events created in your Server in order to automatically highlight noteworthy Events.\n\nUse the "Disable" option to disable HomeCord's event activity module, preventing any and all Scheduled Events from being automatically highlighted to your Server's page on HomeCord's website.\n\nSelect the threshold that best matches your Server's level of event-based activity (which is based off number of people registering their interest to your Server's Events in Discord's Events feature).\n\nAs a baseline: "Low" is intended for smaller or less active Servers, while "High" is intended for larger or busy Servers.`,
     SETTINGS_MODAL_ACTIVITY_THRESHOLD_THREAD_TITLE: `Edit HomeCord: Thread Activity`,
     SETTINGS_MODAL_ACTIVITY_THRESHOLD_THREAD_DESCRIPTION: `Set the threshold of activity that HomeCord should check for messages sent in Threads & Forum Posts in your Server in order to automatically highlight noteworthy Threads/Forums.\n\nUse the "Disable" option to disable HomeCord's thread activity module, preventing any and all Threads/Forums from being automatically highlighted to your Server's page on HomeCord's website.\n\nSelect the threshold that best matches your Server's level of thread-based activity (which is based off number of messages recently sent in Public Threads or Forum Posts in your Server).\n\nAs a baseline: "Low" is intended for smaller or less active Servers, while "High" is intended for larger or busy Servers.`,
+
+
+
+    // ******* USER PRIVACY COMMAND
+    PRIVACY_COMMAND_MODAL_TITLE: `Edit User Privacy Setting`,
+    PRIVACY_COMMAND_MODAL_DESCRIPTION: `Set the message privacy level for HomeCord to showcase your noteworthy messages you send in Servers with HomeCord added.\nShowcased messages will be displayed on HomeCord's website if the Server both has HomeCord added and has enabled HomeCord.\n\nThe privacy settings are as follows:\n- **Public** - Shows full messages including your author details (username & profile picture)\n- **Anonymous** - Shows messages, while removing your author details\n- **Private** - Fully prevents your messages from being showcased or processed by HomeCord`,
+    PRIVACY_COMMAND_MODAL_SELECT_LABEL: `Select Message Privacy Level`,
+    PRIVACY_COMMAND_MODAL_SELECT_OPTION_PUBLIC_LABEL: `Public`,
+    PRIVACY_COMMAND_MODAL_SELECT_OPTION_ANONYMOUS_LABEL: `Anonymous`,
+    PRIVACY_COMMAND_MODAL_SELECT_OPTION_PRIVATE_LABEL: `Private`,
+    PRIVACY_COMMAND_RESPONSE_SUCCESSFUL: `Successfully updated your privacy setting in HomeCord to **{{0}}**`,
+    PRIVACY_COMMAND_RESPONSE_FAILED: `Something went wrong while trying to update your privacy setting... Please try again in a few moments.`,
 }
