@@ -82,11 +82,11 @@ export const DefaultResponseHeaders = {
 /** ENUMs */
 export const ActivityLevel = {
     Disabled: "DISABLED",
-    VeryLow: "VERY_LOW",
+    VeryLow: "VERY-LOW",
     Low: "LOW",
     Medium: "MEDIUM",
     High: "HIGH",
-    VeryHigh: "VERY_HIGH"
+    VeryHigh: "VERY-HIGH"
 };
 
 export const MessagePrivacyLevel = {

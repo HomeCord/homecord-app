@@ -58,4 +58,64 @@ module.exports = {
     // ******* GENERIC AUTOCOMPLETE STUFF
     AUTOCOMPLETE_ERROR_GENERIC: `Error: Unable to process.`,
 
+
+
+    // ******* HOMECORD SETTINGS
+    // Displayed Values
+    SETTINGS_IS_ENABLED_TRUE: `Enabled`,
+    SETTINGS_IS_ENABLED_FALSE: `Disabled`,
+    SETTINGS_DEFAULT_MESSAGE_PRIVACY_PUBLIC: `Public (Shows full messages including author details)`,
+    SETTINGS_DEFAULT_MESSAGE_PRIVACY_ANONYMOUS: `Anonymous (Shows messages *excluding* author details)`,
+    SETTINGS_DEFAULT_MESSAGE_PRIVACY_PRIVATE: `Private (Does not show messages at all)`,
+    SETTINGS_ACTIVITY_LEVEL_DISABLED: `Disabled`,
+    SETTINGS_ACTIVITY_LEVEL_VERY_LOW: `Very Low`,
+    SETTINGS_ACTIVITY_LEVEL_LOW: `Low`,
+    SETTINGS_ACTIVITY_LEVEL_MEDIUM: `Medium`,
+    SETTINGS_ACTIVITY_LEVEL_HIGH: `High`,
+    SETTINGS_ACTIVITY_LEVEL_VERY_HIGH: `Very High`,
+    SETTINGS_ALLOW_STARBOARD_REACTIONS_ENABLED: `Enabled`,
+    SETTINGS_ALLOW_STARBOARD_REACTIONS_DISABLED: `Disabled`,
+    // Panel
+    SETTINGS_PANEL_HEADING: `# __HomeCord's Settings__`,
+    SETTINGS_PANEL_EDIT_BUTTON_LABEL: `Edit`,
+    SETTINGS_PANEL_IS_ENABLED_DESCRIPTION: `### Is HomeCord Enabled for Server?\nHomeCord's webpage for this Server is currently: {{0}}`,
+    SETTINGS_PANEL_MESSAGE_PRIVACY_DESCRIPTION: `### Default Message Privacy\n{{0}}`,
+    SETTINGS_PANEL_STARBOARD_REACTIONS_DESCRIPTION: `### Starboard Bot Compatibility\n{{0}}`,
+    SETTINGS_PANEL_MESSAGE_ACTIVITY_DESCRIPTION: `### Message Activity Threshold\n{{0}}`,
+    SETTINGS_PANEL_EVENT_ACTIVITY_DESCRIPTION: `### Event Activity Threshold\n{{0}}`,
+    SETTINGS_PANEL_THREAD_ACTIVITY_DESCRIPTION: `### Thread Activity Threshold\n{{0}}`,
+    // HomeCord Toggle Modal
+    SETTINGS_MODAL_HOMECORD_TOGGLE_TITLE: `Edit HomeCord: Main Toggle`,
+    SETTINGS_MODAL_HOMECORD_TOGGLE_DESCRIPTION: `Toggle if HomeCord should be enabled or disabled for this Server.\nDisabling HomeCord will hide your Server's webpage on HomeCord's website, and stop HomeCord from processing any messages/events/threads on your Server.\n\nThis action can be toggled at any time.\n-# :information_source: This will only affect HomeCord in this Server, and will *not* affect any other Server using HomeCord.`,
+    SETTINGS_MODAL_HOMECORD_TOGGLE_SELECT_LABEL: `Toggle HomeCord`,
+    SETTINGS_MODAL_HOMECORD_TOGGLE_SELECT_OPTION_ENABLE_LABEL: `Enable HomeCord`,
+    SETTINGS_MODAL_HOMECORD_TOGGLE_SELECT_OPTION_DISABLE_LABEL: `Disable HomeCord`,
+    // Default Privacy Modal
+    SETTINGS_MODAL_DEFAULT_PRIVACY_TITLE: `Edit HomeCord: Default Privacy`,
+    SETTINGS_MODAL_DEFAULT_PRIVACY_DESCRIPTION: `Set the default message privacy level for showcasing messages from this Server onto your Server's page on HomeCord's website.\nThis setting only applies if "Message Activity Threshold" is not disabled.\nYour Server Members can override this setting by setting their own personal privacy preference.\n\nThe default Privacy settings are as follows:\n- **Public** - Shows full messages including their author details\n- **Anonymous** - Shows messages, while removing their author details`,
+    SETTINGS_MODAL_DEFAULT_PRIVACY_SELECT_LABEL: `Select Message Privacy Level`,
+    SETTINGS_MODAL_DEFAULT_PRIVACY_SELECT_OPTION_PUBLIC_LABEL: `Public`,
+    SETTINGS_MODAL_DEFAULT_PRIVACY_SELECT_OPTION_ANONYMOUS_LABEL: `Anonymous`,
+    //SETTINGS_MODAL_DEFAULT_PRIVACY_SELECT_OPTION_PRIVATE_LABEL: `Private`,
+    // Allow Starboard Reactions
+    SETTINGS_MODAL_ALLOW_STARBOARD_TITLE: `Edit HomeCord: Starboard Reactions`,
+    SETTINGS_MODAL_ALLOW_STARBOARD_DESCRIPTION: `To reduce potential conflict with any classic 'Starboard' Bots/Apps this Server may have, HomeCord by default excludes the default :star: Emoji Reactions from being counted towards Message Activity.\n\nThis can be toggled here if you would like :star: Emoji Reactions to count towards HomeCord's Message Activity module.`,
+    SETTINGS_MODAL_ALLOW_STARBOARD_SEELCT_LABEL: `Toggle Starboard Compatibility`,
+    SETTINGS_MODAL_ALLOW_STARBOARD_SELECT_OPTION_ENABLE_LABEL: `Enable`,
+    SETTINGS_MODAL_ALLOW_STARBOARD_SELECT_OPTION_DISABLE_LABEL: `Disable`,
+    // Activity Thresholds
+    SETTINGS_MODAL_ACTIVITY_THRESHOLD_SELECT_LABEL: `Select Activity Threshold`,
+    SETTINGS_MODAL_ACTIVITY_THRESHOLD_SELECT_OPTION_DISABLED: `Disable`,
+    SETTINGS_MODAL_ACTIVITY_THRESHOLD_SELECT_OPTION_VERY_LOW: `Very Low`,
+    SETTINGS_MODAL_ACTIVITY_THRESHOLD_SELECT_OPTION_LOW: `Low`,
+    SETTINGS_MODAL_ACTIVITY_THRESHOLD_SELECT_OPTION_MEDIUM: `Medium`,
+    SETTINGS_MODAL_ACTIVITY_THRESHOLD_SELECT_OPTION_HIGH: `High`,
+    SETTINGS_MODAL_ACTIVITY_THRESHOLD_SELECT_OPTION_VERY_HIGH: `Very High`,
+    // Specific Activity Thresholds
+    SETTINGS_MODAL_ACTIVITY_THRESHOLD_MESSAGE_TITLE: `Edit HomeCord: Message Activity`,
+    SETTINGS_MODAL_ACTIVITY_THRESHOLD_MESSAGE_DESCRIPTION: `Set the threshold of activity that HomeCord should check for messages sent in your Server in order to automatically highlight noteworthy messages.\n\nUse the "Disable" option to disable HomeCord's message activity module, preventing any and all messages from being automatically highlighted to your Server's page on HomeCord's website.\n\nSelect the threshold that best matches your Server's level of message-based activity (which includes Emoji Reactions and direct Replies using Discord's Reply feature).\n\nAs a baseline: "Low" is intended for smaller or less active Servers, while "High" is intended for larger or busy Servers.`,
+    SETTINGS_MODAL_ACTIVITY_THRESHOLD_EVENT_TITLE: `Edit HomeCord: Event Activity`,
+    SETTINGS_MODAL_ACTIVITY_THRESHOLD_EVENT_DESCRIPTION: `Set the threshold of activity that HomeCord should check for Scheduled Events created in your Server in order to automatically highlight noteworthy Events.\n\nUse the "Disable" option to disable HomeCord's event activity module, preventing any and all Scheduled Events from being automatically highlighted to your Server's page on HomeCord's website.\n\nSelect the threshold that best matches your Server's level of event-based activity (which is based off number of people registering their interest to your Server's Events in Discord's Events feature).\n\nAs a baseline: "Low" is intended for smaller or less active Servers, while "High" is intended for larger or busy Servers.`,
+    SETTINGS_MODAL_ACTIVITY_THRESHOLD_THREAD_TITLE: `Edit HomeCord: Thread Activity`,
+    SETTINGS_MODAL_ACTIVITY_THRESHOLD_THREAD_DESCRIPTION: `Set the threshold of activity that HomeCord should check for messages sent in Threads & Forum Posts in your Server in order to automatically highlight noteworthy Threads/Forums.\n\nUse the "Disable" option to disable HomeCord's thread activity module, preventing any and all Threads/Forums from being automatically highlighted to your Server's page on HomeCord's website.\n\nSelect the threshold that best matches your Server's level of thread-based activity (which is based off number of messages recently sent in Public Threads or Forum Posts in your Server).\n\nAs a baseline: "Low" is intended for smaller or less active Servers, while "High" is intended for larger or busy Servers.`,
 }

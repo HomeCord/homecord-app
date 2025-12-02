@@ -21,8 +21,8 @@ importers:
         specifier: ^2.0.4
         version: 2.0.4
       discord-api-types:
-        specifier: ^0.38.35
-        version: 0.38.35
+        specifier: ^0.38.36
+        version: 0.38.36
       mongoose:
         specifier: ^9.0.0
         version: 9.0.0
@@ -80,8 +80,8 @@ packages:
     resolution: {integrity: sha512-Kwc6Wh4lQ5OmkqqKhYGKIuELXl+EPYSCObVE6bWsp1T/cGkOCBN0I8wF/T44BiuhHyNi1mmKVPXk60d41xZ7kw==, tarball: https://registry.npmjs.org/bson/-/bson-7.0.0.tgz}
     engines: {node: '>=20.19.0'}
 
-  discord-api-types@0.38.35:
-    resolution: {integrity: sha512-pI6FKJmkyIhToiDK5f8iok7acugSJDFnr3D2a0m+r91EMSFWCzAAEgUro9Km0AUYQPAUluS6iJaXVKt6+wBF7w==, tarball: https://registry.npmjs.org/discord-api-types/-/discord-api-types-0.38.35.tgz}
+  discord-api-types@0.38.36:
+    resolution: {integrity: sha512-qrbUbjjwtyeBg5HsAlm1C859epfOyiLjPqAOzkdWlCNsZCWJrertnETF/NwM8H+waMFU58xGSc5eXUfXah+WTQ==, tarball: https://registry.npmjs.org/discord-api-types/-/discord-api-types-0.38.36.tgz}
 
   kareem@3.0.0:
     resolution: {integrity: sha512-RKhaOBSPN8L7y4yAgNhDT2602G5FD6QbOIISbjN9D6mjHPeqeg7K+EB5IGSU5o81/X2Gzm3ICnAvQW3x3OP8HA==, tarball: https://registry.npmjs.org/kareem/-/kareem-3.0.0.tgz}
@@ -194,7 +194,7 @@ snapshots:
       '@discordjs/ws': 2.0.4
       '@sapphire/snowflake': 3.5.5
       '@vladfrangu/async_event_emitter': 2.4.7
-      discord-api-types: 0.38.35
+      discord-api-types: 0.38.36
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -206,14 +206,14 @@ snapshots:
       '@sapphire/async-queue': 1.5.5
       '@sapphire/snowflake': 3.5.5
       '@vladfrangu/async_event_emitter': 2.4.7
-      discord-api-types: 0.38.35
+      discord-api-types: 0.38.36
       magic-bytes.js: 1.12.1
       tslib: 2.8.1
       undici: 6.21.3
 
   '@discordjs/util@1.2.0':
     dependencies:
-      discord-api-types: 0.38.35
+      discord-api-types: 0.38.36
 
   '@discordjs/ws@2.0.4':
     dependencies:
@@ -223,7 +223,7 @@ snapshots:
       '@sapphire/async-queue': 1.5.5
       '@types/ws': 8.18.1
       '@vladfrangu/async_event_emitter': 2.4.7
-      discord-api-types: 0.38.35
+      discord-api-types: 0.38.36
       tslib: 2.8.1
       ws: 8.18.3
     transitivePeerDependencies:
@@ -256,7 +256,7 @@ snapshots:
 
   bson@7.0.0: {}
 
-  discord-api-types@0.38.35: {}
+  discord-api-types@0.38.36: {}
 
   kareem@3.0.0: {}
 
