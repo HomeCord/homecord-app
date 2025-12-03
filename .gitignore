@@ -4,3 +4,4 @@ config.js
 
 deployCommands.js
 /Mongoose
+/Resources/activityThresholds.js

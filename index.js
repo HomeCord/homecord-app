@@ -1,10 +1,10 @@
 import { GatewayDispatchEvents, PresenceUpdateStatus } from '@discordjs/core';
-import { InteractionType, MessageType } from 'discord-api-types/v10';
+import { ChannelType, InteractionType, MessageType } from 'discord-api-types/v10';
 import { isChatInputApplicationCommandInteraction, isContextMenuApplicationCommandInteraction, isMessageComponentButtonInteraction, isMessageComponentSelectMenuInteraction } from 'discord-api-types/utils';
 import * as fs from 'node:fs';
 import * as Mongoose from 'mongoose';
 
-import { DiscordClient, UtilityCollections } from './Utility/utilityConstants.js';
+import { ActivityLevel, DiscordClient, SystemMessageTypes, UtilityCollections } from './Utility/utilityConstants.js';
 import { handleSlashCommand } from './Handlers/Commands/slashCommandHandler.js';
 import { handleContextCommand } from './Handlers/Commands/contextCommandHandler.js';
 import { handleButton } from './Handlers/Interactions/buttonHandler.js';
@@ -12,6 +12,7 @@ import { handleSelect } from './Handlers/Interactions/selectHandler.js';
 import { handleAutocomplete } from './Handlers/Interactions/autocompleteHandler.js';
 import { handleModal } from './Handlers/Interactions/modalHandler.js';
 import { GuildConfig } from './Mongoose/Models.js';
+import { processMessageReaction, processMessageReply } from './Handlers/Events/messageEvents.js';
 
 
 
@@ -131,18 +132,6 @@ DiscordClient.on(GatewayDispatchEvents.RateLimited, console.warn);
 
 // *******************************
 //  Discord Message Create Event
-const SystemMessageTypes = [
-    MessageType.RecipientAdd, MessageType.RecipientRemove, MessageType.Call, MessageType.ChannelNameChange,
-    MessageType.ChannelIconChange, MessageType.ChannelPinnedMessage, MessageType.UserJoin, MessageType.GuildBoost,
-    MessageType.GuildBoostTier1, MessageType.GuildBoostTier2, MessageType.GuildBoostTier3, MessageType.ChannelFollowAdd,
-    MessageType.GuildDiscoveryDisqualified, MessageType.GuildDiscoveryRequalified, MessageType.GuildDiscoveryGracePeriodInitialWarning,
-    MessageType.GuildDiscoveryGracePeriodFinalWarning, MessageType.ThreadCreated, MessageType.GuildInviteReminder, MessageType.AutoModerationAction,
-    MessageType.RoleSubscriptionPurchase, MessageType.InteractionPremiumUpsell, MessageType.StageStart, MessageType.StageEnd, MessageType.StageSpeaker,
-    MessageType.StageRaiseHand, MessageType.StageTopic, MessageType.GuildApplicationPremiumSubscription, MessageType.GuildIncidentAlertModeEnabled,
-    MessageType.GuildIncidentAlertModeDisabled, MessageType.GuildIncidentReportRaid, MessageType.GuildIncidentReportFalseAlarm,
-    40, 42, MessageType.PurchaseNotification, MessageType.PollResult, 49, 51, 55, 58, 59, 60, 61, 62, 63
-];
-
 DiscordClient.on(GatewayDispatchEvents.MessageCreate, async ({ data: message, api }) => {
     // Bots/Apps
     if ( message.author.bot ) { return; }
@@ -154,6 +143,26 @@ DiscordClient.on(GatewayDispatchEvents.MessageCreate, async ({ data: message, ap
     // Can't even check that anyways without an API call since Discord's API doesn't provide even a partial Channel object with Messages
 
     // Wish I could also add a safe-guard check for guild.avaliable BUT DISCORD'S API DOESN'T PROVIDE EVEN A PARTIAL GUILD OBJECT WITH MESSAGES EITHER :upside_down:
+
+    // Fetch current Config to see if Message/Thread Activity is enabled
+    let fetchedGuildConfig = await GuildConfig.findOne({ guild_id: message.guild_id });
+    // Edge-case check
+    if ( fetchedGuildConfig == null ) { return; }
+    if ( fetchedGuildConfig.is_homecord_enabled === false ) { return; }
+
+    let fetchedSourceChannel = await api.channels.get(message.channel_id);
+
+    // If Message is a direct reply AND message highlighting is enabled
+    if ( fetchedGuildConfig.message_activity_level !== ActivityLevel.Disabled && message.type === MessageType.Reply ) {
+        await processMessageReply(api, message, fetchedSourceChannel);
+    }
+
+
+    // If Message is sent in a Public/News Thread, AND Thread highlighting is enabled
+    // Annoyingly, I have to fetch the Channel to see its typing. :c
+    if ( fetchedGuildConfig.thread_activity_level !== ActivityLevel.Disabled && (fetchedSourceChannel.type === ChannelType.PublicThread || fetchedSourceChannel.type === ChannelType.AnnouncementThread) ) {
+        //.
+    }
 
     return;
 });
@@ -241,6 +250,23 @@ DiscordClient.on(GatewayDispatchEvents.GuildDelete, async ({ data: guildData, ap
     catch (err) {
         console.error(err);
     }
+
+    return;
+});
+
+
+
+
+
+
+
+
+
+// *******************************
+//  Discord Message Reaction Add Event
+DiscordClient.on(GatewayDispatchEvents.MessageReactionAdd, async ({ data: reactionData, api }) => {
+    // Throw straight into processing method
+    await processMessageReaction(api, reactionData);
 
     return;
 });

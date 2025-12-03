@@ -67,6 +67,111 @@ export function getInteractionLocale(interaction) {
   return interaction.guild_locale != undefined ? interaction.guild_locale : interaction.locale;
 }
 
+/**
+ * Calculates the ISO Timestamp based off the duration inputted
+ * @param {'TWELVE_HOURS'|'ONE_DAY'|'THREE_DAYS'|'FIVE_DAYS'|'SEVEN_DAYS'} duration 
+ */
+export function calculateIsoTimeFromNow(duration) {
+  const now = Date.now();
+  /** @type {String} */
+  let calculatedIsoTimestamp;
+
+  switch (duration)
+  {
+    case "TWELVE_HOURS":
+        calculatedIsoTimestamp = new Date(now + 4.32e+7).toISOString();
+        break;
+
+    case "ONE_DAY":
+        calculatedIsoTimestamp = new Date(now + 8.64e+7).toISOString();
+        break;
+
+    case "THREE_DAYS":
+        calculatedIsoTimestamp = new Date(now + 2.592e+8).toISOString();
+        break;
+      
+    case "FIVE_DAYS":
+        calculatedIsoTimestamp = new Date(now + 4.32e+8).toISOString();
+        break;
+
+    case "SEVEN_DAYS":
+        calculatedIsoTimestamp = new Date(now + 6.048e+8).toISOString();
+        break;
+  }
+
+  return calculatedIsoTimestamp;
+}
+
+/**
+ * Calculates the Unix Timestamp in milliseconds based off the duration inputted
+ * @param {'TWELVE_HOURS'|'ONE_DAY'|'THREE_DAYS'|'FIVE_DAYS'|'SEVEN_DAYS'} duration 
+ */
+export function calculateUnixTimeFromNow(duration) {
+  const now = Date.now();
+  /** @type {Number} */
+  let calculatedUnixTimestamp;
+
+  switch (duration)
+  {
+    case "TWELVE_HOURS":
+        calculatedUnixTimestamp = new Date(now + 4.32e+7).getTime();
+        break;
+
+    case "ONE_DAY":
+        calculatedUnixTimestamp = new Date(now + 8.64e+7).getTime();
+        break;
+
+    case "THREE_DAYS":
+        calculatedUnixTimestamp = new Date(now + 2.592e+8).getTime();
+        break;
+      
+    case "FIVE_DAYS":
+        calculatedUnixTimestamp = new Date(now + 4.32e+8).getTime();
+        break;
+
+    case "SEVEN_DAYS":
+        calculatedUnixTimestamp = new Date(now + 6.048e+8).getTime();
+        break;
+  }
+
+  return calculatedUnixTimestamp;
+}
+
+/**
+ * Calculates the milliseconds based off the duration inputted
+ * @param {'TWELVE_HOURS'|'ONE_DAY'|'THREE_DAYS'|'FIVE_DAYS'|'SEVEN_DAYS'} duration 
+ */
+export function calculateMillisecondsFromDuration(duration) {
+  const now = Date.now();
+  /** @type {Number} */
+  let calculatedDuration;
+
+  switch (duration)
+  {
+    case "TWELVE_HOURS":
+        calculatedDuration = 4.32e+7;
+        break;
+
+    case "ONE_DAY":
+        calculatedDuration = 8.64e+7;
+        break;
+
+    case "THREE_DAYS":
+        calculatedDuration = 2.592e+8;
+        break;
+      
+    case "FIVE_DAYS":
+        calculatedDuration = 4.32e+8;
+        break;
+
+    case "SEVEN_DAYS":
+        calculatedDuration = 6.048e+8;
+        break;
+  }
+
+  return calculatedDuration;
+}
+
 // Json Response Class
 export class JsonResponse extends Response {
     constructor(body, init) {

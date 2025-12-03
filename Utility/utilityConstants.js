@@ -2,6 +2,7 @@ import { REST } from '@discordjs/rest';
 import { WebSocketManager } from '@discordjs/ws';
 import { GatewayIntentBits, Client } from '@discordjs/core';
 import { Collection } from '@discordjs/collection';
+import { MessageType } from 'discord-api-types/v10';
 import * as Mongoose from 'mongoose';
 import { DISCORD_TOKEN, MONGO_CONNECTION_URI } from '../config.js';
 
@@ -95,6 +96,17 @@ export const MessagePrivacyLevel = {
     Public: "PUBLIC"
 };
 
+export const BlockTypes = {
+    Channel: "CHANNEL",
+    Category: "CATEGORY",
+    Role: "ROLE"
+};
+
+export const ShowcaseType = {
+    Highlight: "HIGHLIGHT",
+    Feature: "FEATURE"
+};
+
 export const HomeCordLimits = {
     // Showcaseable items
     MaxShowcasedMessages: 5, // Messages from Text or Public_Thread Channels
@@ -107,3 +119,15 @@ export const HomeCordLimits = {
     MaxBlockedCategories: 10,
     MaxBlockedRoles: 10
 };
+
+export const SystemMessageTypes = [
+    MessageType.RecipientAdd, MessageType.RecipientRemove, MessageType.Call, MessageType.ChannelNameChange,
+    MessageType.ChannelIconChange, MessageType.ChannelPinnedMessage, MessageType.UserJoin, MessageType.GuildBoost,
+    MessageType.GuildBoostTier1, MessageType.GuildBoostTier2, MessageType.GuildBoostTier3, MessageType.ChannelFollowAdd,
+    MessageType.GuildDiscoveryDisqualified, MessageType.GuildDiscoveryRequalified, MessageType.GuildDiscoveryGracePeriodInitialWarning,
+    MessageType.GuildDiscoveryGracePeriodFinalWarning, MessageType.ThreadCreated, MessageType.GuildInviteReminder, MessageType.AutoModerationAction,
+    MessageType.RoleSubscriptionPurchase, MessageType.InteractionPremiumUpsell, MessageType.StageStart, MessageType.StageEnd, MessageType.StageSpeaker,
+    MessageType.StageRaiseHand, MessageType.StageTopic, MessageType.GuildApplicationPremiumSubscription, MessageType.GuildIncidentAlertModeEnabled,
+    MessageType.GuildIncidentAlertModeDisabled, MessageType.GuildIncidentReportRaid, MessageType.GuildIncidentReportFalseAlarm,
+    40, 42, MessageType.PurchaseNotification, MessageType.PollResult, 49, 51, 55, 58, 59, 60, 61, 62, 63
+];
