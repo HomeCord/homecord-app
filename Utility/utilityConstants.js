@@ -131,3 +131,12 @@ export const SystemMessageTypes = [
     MessageType.GuildIncidentAlertModeDisabled, MessageType.GuildIncidentReportRaid, MessageType.GuildIncidentReportFalseAlarm,
     40, 42, MessageType.PurchaseNotification, MessageType.PollResult, 49, 51, 55, 58, 59, 60, 61, 62, 63
 ];
+
+export const ThreadTypes = {
+    /** Thread made in a Text Channel */
+    TextThread: 'TEXT_THREAD',
+    /** Thread made in an Announcement Channel */
+    NewsThread: 'ANNOUNCEMENT_THREAD',
+    /** Thread made in either a Forum Channel or a Media Channel */
+    ForumThread: 'FORUM_THREAD'
+};

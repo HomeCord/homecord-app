@@ -12,7 +12,7 @@ import { handleSelect } from './Handlers/Interactions/selectHandler.js';
 import { handleAutocomplete } from './Handlers/Interactions/autocompleteHandler.js';
 import { handleModal } from './Handlers/Interactions/modalHandler.js';
 import { GuildConfig } from './Mongoose/Models.js';
-import { processMessageReaction, processMessageReply } from './Handlers/Events/messageEvents.js';
+import { processMessageInThread, processMessageReaction, processMessageReply } from './Handlers/Events/messageEvents.js';
 
 
 
@@ -161,7 +161,7 @@ DiscordClient.on(GatewayDispatchEvents.MessageCreate, async ({ data: message, ap
     // If Message is sent in a Public/News Thread, AND Thread highlighting is enabled
     // Annoyingly, I have to fetch the Channel to see its typing. :c
     if ( fetchedGuildConfig.thread_activity_level !== ActivityLevel.Disabled && (fetchedSourceChannel.type === ChannelType.PublicThread || fetchedSourceChannel.type === ChannelType.AnnouncementThread) ) {
-        //.
+        await processMessageInThread(api, message, fetchedSourceChannel);
     }
 
     return;

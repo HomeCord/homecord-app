@@ -1,9 +1,10 @@
 import { Collection } from "@discordjs/collection";
 import { API } from "@discordjs/core";
+import { ChannelType } from 'discord-api-types/v10';
 
-import { Blocklist, GuildConfig, ShowcasedMessage } from "../../Mongoose/Models.js";
-import { ActivityLevel, HomeCordLimits, ShowcaseType, SystemMessageTypes } from "../../Utility/utilityConstants.js";
-import { ReactionThreshold, ReplyThreshold } from "../../Resources/activityThresholds.js";
+import { Blocklist, GuildConfig, ShowcasedMessage, ShowcasedThread } from "../../Mongoose/Models.js";
+import { ActivityLevel, HomeCordLimits, ShowcaseType, SystemMessageTypes, ThreadTypes } from "../../Utility/utilityConstants.js";
+import { ReactionThreshold, ReplyThreshold, ThreadThreshold } from "../../Resources/activityThresholds.js";
 import { calculateIsoTimeFromNow } from "../../Utility/utilityMethods.js";
 
 // Caches
@@ -51,7 +52,7 @@ export async function processMessageReply(api, message, sourceChannel) {
 
     // Check roles of message author being replied to
     const RepliedMessage = await api.channels.getMessage(message.channel_id, message.message_reference.message_id);
-    const RepliedMember = await api.guilds.getMember(message.guild_id, RepliedMessage.author.id);;
+    const RepliedMember = await api.guilds.getMember(message.guild_id, RepliedMessage.author.id);
 
     // Prevent replies to own messages from being counted
     if ( message.author.id === RepliedMessage.author.id ) { return; }
@@ -253,6 +254,93 @@ export async function processMessageReaction(api, reaction) {
         else {
             // Threshold not met, so just add to the count
             CacheMessageActivity.set(message.id, grabFromCache);
+            return;
+        }
+    }
+
+    return;
+}
+
+
+
+
+
+/**
+ * Processes Messages that are sent in a PUBLIC_THREAD or a NEWS_THREAD
+ * @param {API} api 
+ * @param {import('discord-api-types/v10').GatewayMessageCreateDispatchData} message 
+ * @param {import('discord-api-types/v10').APIChannel} sourceChannel 
+ */
+export async function processMessageInThread(api, message, sourceChannel) {
+    // Since we're in a Thread, we need to get the Thread's parent Text/News Channel so we can see if that Text/News Channel has a parent Category or not!
+    let sourceChannelParent = sourceChannel.parent_id != null ? await api.channels.get(sourceChannel.parent_id) : null;
+
+    // Check if message was sent in a blocked channel, in a blocked category, or by a User with a blocked role
+    let blocklistChannelFilter = [ { item_id: message.channel_id } ];
+    if ( sourceChannel.parent_id != null ) { blocklistChannelFilter.push({ item_id: sourceChannel.parent_id }); }
+    if ( sourceChannelParent.parent_id != null ) { blocklistChannelFilter.push({ item_id: sourceChannelParent.parent_id }); }
+    if ( await Blocklist.exists({ guild_id: message.guild_id, $or: blocklistChannelFilter }) != null ) { return; }
+
+    // Check roles of Message Author
+    if ( message.member?.roles.length > 0 ) {
+        let blocklistReplyingRoleFilter = [];
+        message.member?.roles.forEach(role => {
+            // Filter out atEveryone
+            if ( role !== message.guild_id ) { blocklistReplyingRoleFilter.push({ item_id: role }); }
+        });
+
+        if ( await Blocklist.exists({ guild_id: message.guild_id, $or: blocklistReplyingRoleFilter }) != null ) { return; }
+    }
+
+    // Not blocked, now check for if max showcased threads has been hit
+    if ( (await ShowcasedThread.find({ guild_id: message.guild_id })).length === HomeCordLimits.MaxShowcasedThreads ) { return; }
+
+    // Also make sure Thread hasn't already been showcased!
+    if ( await ShowcasedThread.findOne({ guild_id: message.guild_id, thread_id: sourceChannel.id }) != null ) { return }
+
+
+    // Is Thread already in HomeCord's cache
+    let grabFromCache = CacheThreadActivity.get(sourceChannel.id);
+    if ( !grabFromCache ) {
+        // Not in cache, so add it
+        grabFromCache = { thread_id: sourceChannel.id, message_count: 1 };
+        CacheThreadActivity.set(sourceChannel.id, grabFromCache);
+
+        // Create timeout to delete after 3 days
+        setTimeout(() => { CacheThreadActivity.delete(sourceChannel.id); }, 2.592e+8);
+
+        return;
+    }
+    else {
+        // Thread IS in cache, so add one to message_count and then see if it meets activity threshold
+        grabFromCache.message_count += 1;
+        let guildConfig = await GuildConfig.findOne({ guild_id: message.guild_id });
+
+        let threadActivityThreshold = ThreadThreshold[guildConfig.thread_activity_level];
+
+        if ( grabFromCache.message_count >= threadActivityThreshold ) {
+            // Threshold met! So add Thread to Showcased Threads
+            let expiryTime = (guildConfig.thread_activity_level === ActivityLevel.VeryLow || guildConfig.thread_activity_level === ActivityLevel.Low) ? calculateIsoTimeFromNow('SEVEN_DAYS')
+                : guildConfig.thread_activity_level === ActivityLevel.Medium ? calculateIsoTimeFromNow('FIVE_DAYS')
+                : calculateIsoTimeFromNow('THREE_DAYS');
+
+            await ShowcasedThread.create({
+                guild_id: message.guild_id,
+                thread_id: sourceChannel.id,
+                thread_type: sourceChannelParent.type === ChannelType.GuildText ? ThreadTypes.TextThread : sourceChannelParent.type === ChannelType.GuildAnnouncement ? ThreadTypes.NewsThread : ThreadTypes.ForumThread,
+                showcase_type: ShowcaseType.Highlight,
+                showcase_expires_at: expiryTime
+            })
+            .then(async () => {
+                // Remove from cache now that its highlighted
+                CacheThreadActivity.delete(sourceChannel.id);
+                return;
+            })
+            .catch(console.error);
+        }
+        else {
+            // Threshold not met, so just add to the count
+            CacheThreadActivity.set(sourceChannel.id, grabFromCache);
             return;
         }
     }
