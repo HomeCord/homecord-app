@@ -13,6 +13,7 @@ import { handleAutocomplete } from './Handlers/Interactions/autocompleteHandler.
 import { handleModal } from './Handlers/Interactions/modalHandler.js';
 import { GuildConfig } from './Mongoose/Models.js';
 import { processMessageInThread, processMessageReaction, processMessageReply } from './Handlers/Events/messageEvents.js';
+import { processScheduledEventUserAdd } from './Handlers/Events/scheduledEventsEvents.js';
 
 
 
@@ -267,6 +268,23 @@ DiscordClient.on(GatewayDispatchEvents.GuildDelete, async ({ data: guildData, ap
 DiscordClient.on(GatewayDispatchEvents.MessageReactionAdd, async ({ data: reactionData, api }) => {
     // Throw straight into processing method
     await processMessageReaction(api, reactionData);
+
+    return;
+});
+
+
+
+
+
+
+
+
+
+// *******************************
+//  Discord Guild Scheduled Event User Add Event
+DiscordClient.on(GatewayDispatchEvents.GuildScheduledEventUserAdd, async ({ data: eventUserAddData, api }) => {
+    // Throw straight into processing method
+    await processScheduledEventUserAdd(api, eventUserAddData);
 
     return;
 });
