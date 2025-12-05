@@ -10,7 +10,7 @@ import { handleButton } from './Handlers/Interactions/buttonHandler.js';
 import { handleSelect } from './Handlers/Interactions/selectHandler.js';
 import { handleAutocomplete } from './Handlers/Interactions/autocompleteHandler.js';
 import { handleModal } from './Handlers/Interactions/modalHandler.js';
-import { Blocklist, GuildConfig, ShowcasedChannel, ShowcasedEvent, ShowcasedMessage, ShowcasedThread } from './Mongoose/Models.js';
+import { Blocklist, GuildConfig, ShowcasedAnnouncement, ShowcasedChannel, ShowcasedEvent, ShowcasedMessage, ShowcasedThread } from './Mongoose/Models.js';
 import { processMessageInThread, processMessageReaction, processMessageReply } from './Handlers/Events/messageEvents.js';
 import { processScheduledEventUserAdd } from './Handlers/Events/scheduledEventsEvents.js';
 
@@ -251,6 +251,7 @@ DiscordClient.on(GatewayDispatchEvents.GuildDelete, async ({ data: guildData, ap
         await ShowcasedEvent.deleteMany({ guild_id: guildData.id });
         await ShowcasedThread.deleteMany({ guild_id: guildData.id });
         await ShowcasedMessage.deleteMany({ guild_id: guildData.id });
+        await ShowcasedAnnouncement.deleteMany({ guild_id: guildData.id });
     }
     catch (err) {
         console.error(err);
@@ -305,15 +306,24 @@ DiscordClient.on(GatewayDispatchEvents.GuildScheduledEventUserAdd, async ({ data
 //  Discord Message Delete Event
 DiscordClient.on(GatewayDispatchEvents.MessageDelete, async ({ data: message, api }) => {
     // Check to see if deleted Message is a showcased one. If so, remove it from DB!
-    if ( await ShowcasedMessage.exists({ message_id: message.id }) == null ) { return; }
-
-
-    // Remove data
-    try {
-        await ShowcasedMessage.deleteOne({ message_id: message.id });
+    if ( await ShowcasedMessage.exists({ message_id: message.id }) != null ) {
+        // Remove data
+        try {
+            await ShowcasedMessage.deleteOne({ message_id: message.id });
+        }
+        catch (err) {
+            console.error(err);
+        }
     }
-    catch (err) {
-        console.error(err);
+
+    if ( await ShowcasedAnnouncement.exists({ message_id: message.id }) != null ) {
+        // Remove data
+        try {
+            await ShowcasedAnnouncement.deleteOne({ message_id: message.id });
+        }
+        catch (err) {
+            console.error(err);
+        }
     }
 
     return;
@@ -337,14 +347,24 @@ DiscordClient.on(GatewayDispatchEvents.MessageDeleteBulk, async ({ data: message
     });
 
     // Only run deletion if there is at least 1 message that actually exists in DB
-    if ( await ShowcasedMessage.exists({ $or: filterArray }) == null ) { return; }
-
-    // Remove data
-    try {
-        await ShowcasedMessage.deleteMany({ $or: filterArray });
+    if ( await ShowcasedMessage.exists({ $or: filterArray }) != null ) {
+        // Remove data
+        try {
+            await ShowcasedMessage.deleteMany({ $or: filterArray });
+        }
+        catch (err) {
+            console.error(err);
+        }
     }
-    catch (err) {
-        console.error(err);
+
+    if ( await ShowcasedAnnouncement.exists({ $or: filterArray }) != null ) {
+        // Remove data
+        try {
+            await ShowcasedAnnouncement.deleteMany({ $or: filterArray });
+        }
+        catch (err) {
+            console.error(err);
+        }
     }
 
     return;
@@ -407,15 +427,14 @@ DiscordClient.on(GatewayDispatchEvents.ChannelDelete, async ({ data: channel, ap
 //  Discord Role Delete Event
 DiscordClient.on(GatewayDispatchEvents.GuildRoleDelete, async ({ data: role, api }) => {
     // Check to see if deleted Role is a blocked one. If so, remove it from DB!
-    if ( await Blocklist.exists({ item_id: role.role_id }) == null ) { return; }
-
-
-    // Remove data
-    try {
-        await Blocklist.deleteOne({ item_id: role.role_id });
-    }
-    catch (err) {
-        console.error(err);
+    if ( await Blocklist.exists({ item_id: role.role_id }) != null ) {
+        // Remove data
+        try {
+            await Blocklist.deleteOne({ item_id: role.role_id });
+        }
+        catch (err) {
+            console.error(err);
+        }
     }
 
     return;
@@ -433,15 +452,14 @@ DiscordClient.on(GatewayDispatchEvents.GuildRoleDelete, async ({ data: role, api
 //  Discord Thread Delete Event
 DiscordClient.on(GatewayDispatchEvents.ThreadDelete, async ({ data: thread, api }) => {
     // Check to see if deleted Thread is a showcased one. If so, remove it from DB!
-    if ( await ShowcasedThread.exists({ thread_id: thread.id }) == null ) { return; }
-
-
-    // Remove data
-    try {
-        await ShowcasedThread.deleteOne({ thread_id: thread.id });
-    }
-    catch (err) {
-        console.error(err);
+    if ( await ShowcasedThread.exists({ thread_id: thread.id }) != null ) {
+        // Remove data
+        try {
+            await ShowcasedThread.deleteOne({ thread_id: thread.id });
+        }
+        catch (err) {
+            console.error(err);
+        }
     }
 
     return;
@@ -487,15 +505,14 @@ DiscordClient.on(GatewayDispatchEvents.ThreadUpdate, async ({ data: thread, api 
 //  Discord Scheduled Event Delete Event
 DiscordClient.on(GatewayDispatchEvents.GuildScheduledEventDelete, async ({ data: scheduledEvent, api }) => {
     // Check to see if deleted Scheduled Event is a showcased one. If so, remove it from DB!
-    if ( await ShowcasedEvent.exists({ event_id: scheduledEvent.id }) == null ) { return; }
-
-
-    // Remove data
-    try {
-        await ShowcasedEvent.deleteOne({ event_id: scheduledEvent.id });
-    }
-    catch (err) {
-        console.error(err);
+    if ( await ShowcasedEvent.exists({ event_id: scheduledEvent.id }) != null ) {
+        // Remove data
+        try {
+            await ShowcasedEvent.deleteOne({ event_id: scheduledEvent.id });
+        }
+        catch (err) {
+            console.error(err);
+        }
     }
 
     return;

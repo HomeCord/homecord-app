@@ -2,7 +2,7 @@ import { Collection } from "@discordjs/collection";
 import { API } from "@discordjs/core";
 import { ChannelType } from 'discord-api-types/v10';
 
-import { Blocklist, GuildConfig, ShowcasedMessage, ShowcasedThread } from "../../Mongoose/Models.js";
+import { Blocklist, GuildConfig, ShowcasedAnnouncement, ShowcasedMessage, ShowcasedThread } from "../../Mongoose/Models.js";
 import { ActivityLevel, HomeCordLimits, ShowcaseType, SystemMessageTypes, ThreadTypes } from "../../Utility/utilityConstants.js";
 import { ReactionThreshold, ReplyThreshold, ThreadThreshold } from "../../Resources/activityThresholds.js";
 import { calculateIsoTimeFromNow } from "../../Utility/utilityMethods.js";
@@ -73,6 +73,7 @@ export async function processMessageReply(api, message, sourceChannel) {
     if ( (await ShowcasedMessage.find({ guild_id: message.guild_id })).length === HomeCordLimits.MaxShowcasedMessages ) { return; }
 
     // Also make sure Message hasn't already been showcased!
+    if ( await ShowcasedAnnouncement.findOne({ guild_id: message.guild_id, message_id: RepliedMessage.id }) != null ) { return; }
     if ( await ShowcasedMessage.findOne({ guild_id: message.guild_id, message_id: RepliedMessage.id }) != null ) { return }
 
     // Ensure Replied Message is not too old
@@ -185,6 +186,7 @@ export async function processMessageReaction(api, reaction) {
     if ( (await ShowcasedMessage.find({ guild_id: reaction.guild_id })).length === HomeCordLimits.MaxShowcasedMessages ) { return; }
 
     // Also make sure Message hasn't already been showcased!
+    if ( await ShowcasedAnnouncement.findOne({ guild_id: reaction.guild_id, message_id: message.id }) != null ) { return }
     if ( await ShowcasedMessage.findOne({ guild_id: reaction.guild_id, message_id: message.id }) != null ) { return }
 
     // Ensure Message is not too old
