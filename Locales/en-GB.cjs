@@ -130,4 +130,38 @@ module.exports = {
     PRIVACY_COMMAND_MODAL_SELECT_OPTION_PRIVATE_LABEL: `Private`,
     PRIVACY_COMMAND_RESPONSE_SUCCESSFUL: `Successfully updated your privacy setting in HomeCord to **{{0}}**`,
     PRIVACY_COMMAND_RESPONSE_FAILED: `Something went wrong while trying to update your privacy setting... Please try again in a few moments.`,
+
+
+
+    // ******* FEATURE MESSAGE COMMAND
+    FEATURE_MESSAGE_COMMAND_ERROR_INVALID_MESSAGE_TYPE: `This message cannot be featured onto HomeCord.\nThis could be for one of the following reasons:\n- This message was sent by a Bot/App or a Webhook\n- This message is a Discord System message\n- Or this message type is unsupported by HomeCord`,
+    FEATURE_MESSAGE_COMMAND_ERROR_NO_SERVER_SETTINGS_FOUND: `This message cannot be featured due to an internal error preventing HomeCord from fetching the stored HomeCord settings for this Server.`,
+    FEATURE_MESSAGE_COMMAND_ERROR_HOMECORD_IS_DISABLED: `This message cannot be featured while HomeCord is disabled in this Server.\nPlease have a Server Admin enable HomeCord via \`/settings\` if you wish to have a specialised landing page for this Server!`,
+    FEATURE_MESSAGE_COMMAND_ERROR_MESSAGE_MODULE_DISABLED: `This message cannot be featured while HomeCord's Message Activity module has been disabled in this Server.\nPlease have a Server Admin enable the Message Activity module via \`/settings\` if you wish to highlight or feature standard messages to your HomeCord webpage.`,
+    FEATURE_MESSAGE_COMMAND_ERROR_FORWARDS_NOT_SUPPORTED: `This message cannot be featured due to Forwarded messages not currently being supported by HomeCord at this time.`,
+    FEATURE_MESSAGE_COMMAND_ERROR_MESSAGE_TOO_OLD: `This message is too old to be featured to HomeCord's webpage.`,
+    FEATURE_MESSAGE_COMMAND_ERROR_AUTHOR_PRIVACY_BLOCKS_FEATURING: `This message's author has used HomeCord's \`/privacy\` Command to block their messages from being showcased to HomeCord's webpage.`,
+    FEATURE_MESSAGE_COMMAND_ERROR_CHANNEL_BLOCKED: `This message cannot be featured due to being sent in a Channel or Category that has been blocked by this Server's Admins via HomeCord's \`/blocklist\` Command.`,
+    FEATURE_MESSAGE_COMMAND_ERROR_ROLE_BLOCKED: `This message cannot be featured due to being sent by a User with a Role that has been blocked by this Server's Admins via use of HomeCord's \`/blocklist\` Command.`,
+    FEATURE_MESSAGE_COMMAND_ERROR_MESSAGE_ALREADY_SHOWCASED: `This message is already being showcased on this Server's HomeCord page!`,
+    FEATURE_MESSAGE_COMMAND_ERROR_MAX_SHOWCASED_MESSAGES_HIT: `This Server is currently at the maximum number of messages allowed to be showcased at the same time!`,
+    FEATURE_MESSAGE_COMMAND_ERROR_MESSAGE_SHOWCASE_FAILED: `Something went wrong while trying to feature this message to this Server's HomeCord page...`,
+    FEATURE_MESSAGE_COMMAND_ERROR_ANNOUNCEMENT_ALREADY_SHOWCASED: `This announcement is already being showcased on this Server's HomeCord page!`,
+    FEATURE_MESSAGE_COMMAND_ERROR_MAX_SHOWCASED_ANNOUNCEMENTS_HIT: `This Server is currently at the maximum number of announcements allowed to be featured at the same time.\nIf this isn't an announcement, maybe try featuring it as a standard message instead.`,
+    FEATURE_MESSAGE_COMMAND_ERROR_ANNOUNCEMENT_SHOWCASE_FAILED: `Something went wrong while trying to feature this announcement to this Server's HomeCord page...`,
+
+    FEATURE_MESSAGE_COMMAND_SUCCESS_FEATURED_MESSAGE: `Successfully featured this message to this Server's HomeCord page!`,
+    FEATURE_MESSAGE_COMMAND_SUCCESS_FEATURED_ANNOUNCEMENT: `Successfully featured this announcement to this Server's HomeCord page!`,
+    
+    FEATURE_MESSAGE_COMMAND_MODAL_TITLE: `Feature Message`,
+    FEATURE_MESSAGE_COMMAND_MODAL_MESSAGE_TYPE_LABEL: `Message Feature Type`,
+    FEATURE_MESSAGE_COMMAND_MODAL_MESSAGE_TYPE_DESCRIPTION: `What type of message should this message be featured as?`,
+    FEATURE_MESSAGE_COMMAND_MODAL_MESSAGE_TYPE_OPTION_STANDARD: `Standard`,
+    FEATURE_MESSAGE_COMMAND_MODAL_MESSAGE_TYPE_OPTION_ANNOUNCEMENT: `Announcement`,
+    FEATURE_MESSAGE_COMMAND_MODAL_DURATION_LABEL: `Feature Duration`,
+    FEATURE_MESSAGE_COMMAND_MODAL_DURATION_DESCRIPTION: `How long should this message be featured for?`,
+    FEATURE_MESSAGE_COMMAND_MODAL_DURATION_OPTION_TWELVE_HOURS: `12 Hours`,
+    FEATURE_MESSAGE_COMMAND_MODAL_DURATION_OPTION_ONE_DAY: `1 Day`,
+    FEATURE_MESSAGE_COMMAND_MODAL_DURATION_OPTION_THREE_DAYS: `3 Days`,
+    FEATURE_MESSAGE_COMMAND_MODAL_DURATION_OPTION_SEVEN_DAYS: `7 Days`,
 }

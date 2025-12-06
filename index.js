@@ -134,10 +134,13 @@ DiscordClient.on(GatewayDispatchEvents.RateLimited, console.warn);
 //  Discord Message Create Event
 DiscordClient.on(GatewayDispatchEvents.MessageCreate, async ({ data: message, api }) => {
     // Bots/Apps
-    if ( message.author.bot ) { return; }
+    if ( message.author.bot || message.webhook_id != undefined ) { return; }
 
     // System Messages
     if ( message.author.system || SystemMessageTypes.includes(message.type) ) { return; }
+
+    // If a Forward, reject for now
+    if ( message.message_snapshots != undefined ) { return; }
 
     // No need to filter out messages from DMs since that can be controlled via the Intents system!
     // Can't even check that anyways without an API call since Discord's API doesn't provide even a partial Channel object with Messages

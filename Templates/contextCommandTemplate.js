@@ -49,8 +49,7 @@ export const ContextCommand = {
         const CommandData = {};
 
         CommandData.name = this.name;
-        CommandData.description = this.description;
-        CommandData.description_localizations = this.localizedDescriptions;
+        CommandData.description = "";
         CommandData.type = this.commandType;
         // Integration Types - 0 for GUILD_INSTALL, 1 for USER_INSTALL.
         //  MUST include at least one. 
@@ -63,7 +62,7 @@ export const ContextCommand = {
     },
 
     /** Runs the Command
-     * @param {import('discord-api-types/v10').APIChatInputApplicationCommandInteraction} interaction 
+     * @param {import('discord-api-types/v10').APIContextMenuInteraction} interaction 
      * @param {API} api
      * @param {import('discord-api-types/v10').APIUser} interactionUser 
      */

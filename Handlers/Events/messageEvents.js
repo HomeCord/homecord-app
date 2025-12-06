@@ -5,7 +5,7 @@ import { ChannelType } from 'discord-api-types/v10';
 import { Blocklist, GuildConfig, ShowcasedAnnouncement, ShowcasedMessage, ShowcasedThread } from "../../Mongoose/Models.js";
 import { ActivityLevel, HomeCordLimits, ShowcaseType, SystemMessageTypes, ThreadTypes } from "../../Utility/utilityConstants.js";
 import { ReactionThreshold, ReplyThreshold, ThreadThreshold } from "../../Resources/activityThresholds.js";
-import { calculateIsoTimeFromNow } from "../../Utility/utilityMethods.js";
+import { calculateIsoTimeFromNow, calculateMillisecondsFromDuration } from "../../Utility/utilityMethods.js";
 
 // Caches
 /** Cache of Messages & how many Replies/Reactions they've had in the past 3 days
@@ -77,7 +77,7 @@ export async function processMessageReply(api, message, sourceChannel) {
     if ( await ShowcasedMessage.findOne({ guild_id: message.guild_id, message_id: RepliedMessage.id }) != null ) { return }
 
     // Ensure Replied Message is not too old
-    if ( (Date.now() - Date.parse(RepliedMessage.timestamp)) > 6.048e+8 ) { return; }
+    if ( (Date.now() - Date.parse(RepliedMessage.timestamp)) > calculateMillisecondsFromDuration('SEVEN_DAYS') ) { return; }
 
 
     // Is Message already in HomeCord's cache
@@ -88,7 +88,7 @@ export async function processMessageReply(api, message, sourceChannel) {
         CacheMessageActivity.set(RepliedMessage.id, grabFromCache);
 
         // Create timeout to delete after 3 days
-        setTimeout(() => { CacheMessageActivity.delete(RepliedMessage.id); }, 2.592e+8);
+        setTimeout(() => { CacheMessageActivity.delete(RepliedMessage.id); }, calculateMillisecondsFromDuration('THREE_DAYS'));
 
         return;
     }
@@ -148,7 +148,7 @@ export async function processMessageReaction(api, reaction) {
     const sourceChannel = await api.channels.get(message.channel_id);
 
     // Filter out Bots, System Messages, etc
-    if ( fullAuthorMember.user.bot ) { return; }
+    if ( fullAuthorMember.user.bot || message.webhook_id != undefined ) { return; }
     if ( message.author.system || SystemMessageTypes.includes(message.type) ) { return; }
     // Filter out reacting to your own message
     if ( message.author.id === reaction.user_id ) { return; }
@@ -190,7 +190,7 @@ export async function processMessageReaction(api, reaction) {
     if ( await ShowcasedMessage.findOne({ guild_id: reaction.guild_id, message_id: message.id }) != null ) { return }
 
     // Ensure Message is not too old
-    if ( (Date.now() - Date.parse(message.timestamp)) > 6.048e+8 ) { return; }
+    if ( (Date.now() - Date.parse(message.timestamp)) > calculateMillisecondsFromDuration('SEVEN_DAYS') ) { return; }
 
 
 
@@ -202,12 +202,12 @@ export async function processMessageReaction(api, reaction) {
         CacheMessageActivity.set(message.id, grabFromCache);
 
         // Create timeout to delete after 3 days
-        setTimeout(() => { CacheMessageActivity.delete(RepliedMessage.id); }, 2.592e+8);
+        setTimeout(() => { CacheMessageActivity.delete(RepliedMessage.id); }, calculateMillisecondsFromDuration('THREE_DAYS'));
 
         // Create cooldown to prevent being showcased for about an hour, just to reduce chances of accidental spam-additions
         if ( !CacheReactionCooldown.has(message.id) ) {
             CacheReactionCooldown.set(message.id, { threshold_met: false });
-            setTimeout(() => { CacheReactionCooldown.delete(message.id); }, 3.6e+6);
+            setTimeout(() => { CacheReactionCooldown.delete(message.id); }, calculateMillisecondsFromDuration('ONE_HOUR'));
         }
 
         return;
@@ -309,7 +309,7 @@ export async function processMessageInThread(api, message, sourceChannel) {
         CacheThreadActivity.set(sourceChannel.id, grabFromCache);
 
         // Create timeout to delete after 3 days
-        setTimeout(() => { CacheThreadActivity.delete(sourceChannel.id); }, 2.592e+8);
+        setTimeout(() => { CacheThreadActivity.delete(sourceChannel.id); }, calculateMillisecondsFromDuration('THREE_DAYS'));
 
         return;
     }

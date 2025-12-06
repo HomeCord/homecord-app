@@ -110,7 +110,7 @@ export const ShowcaseType = {
 export const HomeCordLimits = {
     // Showcaseable items
     MaxShowcasedMessages: 5, // Messages from Text or Public_Thread Channels
-    MaxShowcasedAnnouncements: 5, // Messages from Announcement Channels
+    MaxShowcasedAnnouncements: 4, // Messages from Announcement Channels
     MaxShowcasedEvents: 5,
     MaxShowcasedChannels: 6,
     MaxShowcasedThreads: 5,

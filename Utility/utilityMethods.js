@@ -79,24 +79,24 @@ export function calculateIsoTimeFromNow(duration) {
   switch (duration)
   {
     case "TWELVE_HOURS":
-        calculatedIsoTimestamp = new Date(now + 4.32e+7).toISOString();
-        break;
+      calculatedIsoTimestamp = new Date(now + 4.32e+7).toISOString();
+      break;
 
     case "ONE_DAY":
-        calculatedIsoTimestamp = new Date(now + 8.64e+7).toISOString();
-        break;
+      calculatedIsoTimestamp = new Date(now + 8.64e+7).toISOString();
+      break;
 
     case "THREE_DAYS":
-        calculatedIsoTimestamp = new Date(now + 2.592e+8).toISOString();
-        break;
+      calculatedIsoTimestamp = new Date(now + 2.592e+8).toISOString();
+      break;
       
     case "FIVE_DAYS":
-        calculatedIsoTimestamp = new Date(now + 4.32e+8).toISOString();
-        break;
+      calculatedIsoTimestamp = new Date(now + 4.32e+8).toISOString();
+      break;
 
     case "SEVEN_DAYS":
-        calculatedIsoTimestamp = new Date(now + 6.048e+8).toISOString();
-        break;
+      calculatedIsoTimestamp = new Date(now + 6.048e+8).toISOString();
+      break;
   }
 
   return calculatedIsoTimestamp;
@@ -114,24 +114,24 @@ export function calculateUnixTimeFromNow(duration) {
   switch (duration)
   {
     case "TWELVE_HOURS":
-        calculatedUnixTimestamp = new Date(now + 4.32e+7).getTime();
-        break;
+      calculatedUnixTimestamp = new Date(now + 4.32e+7).getTime();
+      break;
 
     case "ONE_DAY":
-        calculatedUnixTimestamp = new Date(now + 8.64e+7).getTime();
-        break;
+      calculatedUnixTimestamp = new Date(now + 8.64e+7).getTime();
+      break;
 
     case "THREE_DAYS":
-        calculatedUnixTimestamp = new Date(now + 2.592e+8).getTime();
-        break;
+      calculatedUnixTimestamp = new Date(now + 2.592e+8).getTime();
+      break;
       
     case "FIVE_DAYS":
-        calculatedUnixTimestamp = new Date(now + 4.32e+8).getTime();
-        break;
+      calculatedUnixTimestamp = new Date(now + 4.32e+8).getTime();
+      break;
 
     case "SEVEN_DAYS":
-        calculatedUnixTimestamp = new Date(now + 6.048e+8).getTime();
-        break;
+      calculatedUnixTimestamp = new Date(now + 6.048e+8).getTime();
+      break;
   }
 
   return calculatedUnixTimestamp;
@@ -139,7 +139,7 @@ export function calculateUnixTimeFromNow(duration) {
 
 /**
  * Calculates the milliseconds based off the duration inputted
- * @param {'TWELVE_HOURS'|'ONE_DAY'|'THREE_DAYS'|'FIVE_DAYS'|'SEVEN_DAYS'} duration 
+ * @param {'ONE_HOUR'|'TWELVE_HOURS'|'ONE_DAY'|'THREE_DAYS'|'FIVE_DAYS'|'SEVEN_DAYS'} duration 
  */
 export function calculateMillisecondsFromDuration(duration) {
   const now = Date.now();
@@ -148,25 +148,29 @@ export function calculateMillisecondsFromDuration(duration) {
 
   switch (duration)
   {
+    case "ONE_HOUR":
+      calculatedDuration = 3.6e+6;
+      break;
+
     case "TWELVE_HOURS":
-        calculatedDuration = 4.32e+7;
-        break;
+      calculatedDuration = 4.32e+7;
+      break;
 
     case "ONE_DAY":
-        calculatedDuration = 8.64e+7;
-        break;
+      calculatedDuration = 8.64e+7;
+      break;
 
     case "THREE_DAYS":
-        calculatedDuration = 2.592e+8;
-        break;
+      calculatedDuration = 2.592e+8;
+      break;
       
     case "FIVE_DAYS":
-        calculatedDuration = 4.32e+8;
-        break;
+      calculatedDuration = 4.32e+8;
+      break;
 
     case "SEVEN_DAYS":
-        calculatedDuration = 6.048e+8;
-        break;
+      calculatedDuration = 6.048e+8;
+      break;
   }
 
   return calculatedDuration;
