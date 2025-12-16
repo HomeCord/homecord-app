@@ -64,6 +64,7 @@ export const Modal = {
             await ShowcasedMessage.create({
                 guild_id: interaction.guild_id,
                 message_id: sourceMessageId,
+                channel_id: interaction.channel?.id,
                 showcase_type: ShowcaseType.Feature,
                 showcase_expires_at: expiryTime
             })
@@ -102,6 +103,7 @@ export const Modal = {
             await ShowcasedAnnouncement.create({
                 guild_id: interaction.guild_id,
                 message_id: sourceMessageId,
+                channel_id: interaction.channel?.id,
                 showcase_type: ShowcaseType.Feature,
                 showcase_expires_at: expiryTime
             })

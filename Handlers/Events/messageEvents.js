@@ -111,6 +111,7 @@ export async function processMessageReply(api, message, sourceChannel) {
             await ShowcasedMessage.create({
                 guild_id: message.guild_id,
                 message_id: RepliedMessage.id,
+                channel_id: RepliedMessage.channel_id,
                 showcase_type: ShowcaseType.Highlight,
                 showcase_expires_at: expiryTime
             })
@@ -243,6 +244,7 @@ export async function processMessageReaction(api, reaction) {
             await ShowcasedMessage.create({
                 guild_id: message.guild_id,
                 message_id: message.id,
+                channel_id: message.channel_id,
                 showcase_type: ShowcaseType.Highlight,
                 showcase_expires_at: expiryTime
             })
