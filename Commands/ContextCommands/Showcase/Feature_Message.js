@@ -89,6 +89,15 @@ export const ContextCommand = {
             return;
         }
 
+        // If Message uses Components v2, reject due to webpage dependancy not supporting those yet
+        if ( sourceMessage.flags != undefined && ((sourceMessage.flags & MessageFlags.IsComponentsV2) == MessageFlags.IsComponentsV2) ) {
+            await api.interactions.reply(interaction.id, interaction.token, {
+                flags: MessageFlags.Ephemeral,
+                content: localize(interaction.locale, 'FEATURE_MESSAGE_COMMAND_ERROR_COMPONENTS_V2')
+            });
+            return;
+        }
+
         // Ensure HomeCord is enabled for this Server, AND that the Server has enabled HomeCord's Message Activity module
         let fetchedGuildConfig = await GuildConfig.findOne({ guild_id: interaction.guild_id });
         if ( fetchedGuildConfig == null ) {

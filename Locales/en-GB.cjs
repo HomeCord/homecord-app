@@ -149,6 +149,7 @@ module.exports = {
     FEATURE_MESSAGE_COMMAND_ERROR_ANNOUNCEMENT_ALREADY_SHOWCASED: `This announcement is already being showcased on this Server's HomeCord page!`,
     FEATURE_MESSAGE_COMMAND_ERROR_MAX_SHOWCASED_ANNOUNCEMENTS_HIT: `This Server is currently at the maximum number of announcements allowed to be featured at the same time.\nIf this isn't an announcement, maybe try featuring it as a standard message instead.`,
     FEATURE_MESSAGE_COMMAND_ERROR_ANNOUNCEMENT_SHOWCASE_FAILED: `Something went wrong while trying to feature this announcement to this Server's HomeCord page...`,
+    FEATURE_MESSAGE_COMMAND_ERROR_COMPONENTS_V2: `This message cannot be featured, as HomeCord's website does not support Discord's Components v2 system yet.`,
 
     FEATURE_MESSAGE_COMMAND_SUCCESS_FEATURED_MESSAGE: `Successfully featured this message to this Server's HomeCord page!`,
     FEATURE_MESSAGE_COMMAND_SUCCESS_FEATURED_ANNOUNCEMENT: `Successfully featured this announcement to this Server's HomeCord page!`,
