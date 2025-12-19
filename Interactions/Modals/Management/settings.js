@@ -1,10 +1,11 @@
 import { API } from '@discordjs/core';
-import { ButtonStyle, ComponentType, SeparatorSpacingSize } from 'discord-api-types/v10';
+import { ButtonStyle, ComponentType, MessageFlags, SeparatorSpacingSize } from 'discord-api-types/v10';
 
 import { GuildConfig } from '../../../Mongoose/Models.js';
 import { localize } from '../../../Utility/localizeResponses.js';
 import { rgbArrayToInteger } from '../../../Utility/utilityMethods.js';
-import { ActivityLevel, MessagePrivacyLevel } from '../../../Utility/utilityConstants.js';
+import { ActivityLevel, MessagePrivacyLevel, RegExPatterns } from '../../../Utility/utilityConstants.js';
+import { DISCORD_APP_USER_ID, DISCORD_TOKEN } from '../../../config.js';
 
 
 export const Modal = {
@@ -31,7 +32,7 @@ export const Modal = {
         let passedSettingName = splitCustomId.pop();
         // Grab inputted new value
         const ModalComponents = interaction.data.components;
-        let inputNewValue = ModalComponents[1].component.values.shift();
+        let inputNewValue = ModalComponents[1].component.type === ComponentType.TextInput ? ModalComponents[1].component.value : ModalComponents[1].component.values.shift();
 
 
         // Edit the correct value in the Database Entry
@@ -72,6 +73,58 @@ export const Modal = {
             .catch(async (err) => {
                 console.error(err);
             });
+        }
+        else if ( passedSettingName === 'guild-invite' ) {
+            // Validate that inputted string *is* a Discord Invite to a Guild
+            if ( RegExPatterns.DiscordInvite.test(inputNewValue) ) {
+                let inviteCode = RegExPatterns.DiscordInvite.exec(inputNewValue)?.[1] ?? inputNewValue;
+
+                // Now validate that the invite is to *this* specific Discord Guild
+                let fetchInvite = await fetch(`https://discord.com/api/v10/invites/${inviteCode}`, {
+                    headers: {
+                        'Authorization': `Bot ${DISCORD_TOKEN}`,
+                        'content-type': 'application/json'
+                    },
+                    method: 'GET'
+                });
+
+                if ( fetchInvite.status === 200 ) {
+                    let resolveInviteData = await fetchInvite.json();
+
+                    if ( resolveInviteData.guild_id == null ) {
+                        // Invite is NOT for a Guild (it's a GroupDM or Friend invite instead)
+                        await updateSettingsPanel(interaction, api, 'INVITE_NOT_FOR_GUILD');
+                        return;
+                    }
+                    else if ( resolveInviteData.guild_id !== interaction.guild_id ) {
+                        // Invite is for a different Guild
+                        await updateSettingsPanel(interaction, api, 'INVITE_FOR_DIFFERENT_GUILD');
+                        return;
+                    }
+                    else {
+                        // Invite is for this Guild, so save to database
+                        await GuildConfig.updateOne({ guild_id: interaction.guild_id }, { guild_invite: `https://discord.gg/${resolveInviteData.code}` })
+                        .then(async () => {
+                            // ACK
+                            await updateSettingsPanel(interaction, api);
+                            return;
+                        })
+                        .catch(async (err) => {
+                            console.error(err);
+                        });
+                    }
+                }
+                else {
+                    // Just in case
+                    await updateSettingsPanel(interaction, api, 'INVALID_INVITE');
+                    return;
+                }
+            }
+            else {
+                // Inputted value is not a valid invite
+                await updateSettingsPanel(interaction, api, 'INVALID_INVITE');
+                return;
+            }
         }
         else if ( passedSettingName === 'message-activity' ) {
             // Edit Database
@@ -122,8 +175,9 @@ export const Modal = {
 /** Runs the Modal
  * @param {import('discord-api-types/v10').APIModalSubmitGuildInteraction} interaction 
  * @param {API} api
+ * @param {'INVALID_INVITE'|'INVITE_NOT_FOR_GUILD'|'INVITE_FOR_DIFFERENT_GUILD'|null} inviteError 
  */
-async function updateSettingsPanel(interaction, api) {
+async function updateSettingsPanel(interaction, api, inviteError) {
     // Fetch updated settings to display
     let fetchedSettings = await GuildConfig.findOne({ guild_id: interaction.guild_id });
     // Convert raw value into more UX-friendly values
@@ -150,6 +204,7 @@ async function updateSettingsPanel(interaction, api) {
         : fetchedSettings.thread_activity_level === ActivityLevel.High ? localize(interaction.locale, 'SETTINGS_ACTIVITY_LEVEL_HIGH')
         : localize(interaction.locale, 'SETTINGS_ACTIVITY_LEVEL_VERY_HIGH');
     let settingAllowStarboardReactions = fetchedSettings.allow_starboard_reactions ? localize(interaction.locale, 'SETTINGS_ALLOW_STARBOARD_REACTIONS_ENABLED') : localize(interaction.locale, 'SETTINGS_ALLOW_STARBOARD_REACTIONS_DISABLED');
+    let settingGuildInvite = fetchedSettings.guild_invite == null ? localize(interaction.locale, 'SETTINGS_GUILD_INVITE_NOT_SET') : `https://discord.gg/${fetchedSettings.guild_invite}`;
 
 
     // Construct components to display Settings Panel in
@@ -209,6 +264,20 @@ async function updateSettingsPanel(interaction, api) {
                 "emoji": { "id": null, "name": "⚙" }
             }
         }, {
+            // Guild Invite Setting
+            "type": ComponentType.Section,
+            "components": [{
+                "type": ComponentType.TextDisplay,
+                "content": localize(interaction.locale, 'SETTINGS_PANEL_GUILD_INVITE_DESCRIPTION', settingGuildInvite)
+            }],
+            "accessory": {
+                "type": ComponentType.Button,
+                "style": ButtonStyle.Secondary,
+                "custom_id": `settings_guild-invite_${fetchedSettings.guild_invite}`,
+                "label": localize(interaction.locale, 'SETTINGS_PANEL_EDIT_BUTTON_LABEL'),
+                "emoji": { "id": null, "name": "⚙" }
+            }
+        }, {
             "type": ComponentType.Separator,
             "divider": true,
             "spacing": SeparatorSpacingSize.Small
@@ -258,7 +327,15 @@ async function updateSettingsPanel(interaction, api) {
     }];
 
 
-    await api.interactions.updateMessage(interaction.id, interaction.token, { components: settingsPanelComponents });
+    await api.interactions.updateMessage(interaction.id, interaction.token, { components: settingsPanelComponents })
+    .then(async () => {
+        // If an error was given due to updating Guild Invite, handle that here via a follow-up
+        let inviteResponse = inviteError === 'INVITE_NOT_FOR_GUILD' ? localize(interaction.locale, 'SETTINGS_GUILD_INVITE_ERROR_INVITE_NOT_FOR_A_GUILD')
+            : inviteError === 'INVITE_FOR_DIFFERENT_GUILD' ? localize(interaction.locale, 'SETTINGS_GUILD_INVITE_ERROR_INVITE_FOR_DIFFERENT_GUILD')
+            : localize(interaction.locale, 'SETTINGS_GUILD_INVITE_ERROR_INVALID_INVITE');
+
+        await api.interactions.followUp(DISCORD_APP_USER_ID, interaction.token, { flags: MessageFlags.Ephemeral, content: inviteResponse });
+    });
 
     return;
 }

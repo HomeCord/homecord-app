@@ -140,3 +140,8 @@ export const ThreadTypes = {
     /** Thread made in either a Forum Channel or a Media Channel */
     ForumThread: 'FORUM_THREAD'
 };
+
+/** RegEx patterns that are useful */
+export const RegExPatterns = {
+    DiscordInvite: new RegExp(/discord(?:(?:app)?\.com\/invite|\.gg(?:\/invite)?)\/(?<code>[\w-]{2,255})/i)
+};

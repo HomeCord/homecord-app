@@ -1,5 +1,5 @@
 import { API } from '@discordjs/core';
-import { ComponentType } from 'discord-api-types/v10';
+import { ComponentType, TextInputStyle } from 'discord-api-types/v10';
 import { ActivityLevel, MessagePrivacyLevel } from '../../../Utility/utilityConstants.js';
 import { localize } from '../../../Utility/localizeResponses.js';
 
@@ -44,6 +44,10 @@ export const Button = {
 
             case 'starboard-reactions':
                 await editStarboardCompatibility(interaction, api, passedSettingsValue);
+                return;
+
+            case 'guild-invite':
+                await editGuildInvite(interaction, api, passedSettingsValue);
                 return;
 
             case 'message-activity':
@@ -208,6 +212,44 @@ async function editStarboardCompatibility(interaction, api, settingValue) {
                     "value": `DISABLE`,
                     "default": !castedSettingValue
                 }]
+            }
+        }]
+    };
+
+
+    await api.interactions.createModal(interaction.id, interaction.token, responseModal);
+
+    return;
+}
+
+
+
+
+
+
+
+/** Handles setting the Guild Invite
+ * @param {import('discord-api-types/v10').APIMessageComponentButtonInteraction} interaction 
+ * @param {API} api
+ * @param {Boolean} settingValue
+ */
+async function editGuildInvite(interaction, api, settingValue) {
+    // Construct Modal
+    /** @type {import('discord-api-types/v10').APIModalInteractionResponseCallbackData} */
+    let responseModal = {
+        "title": localize(interaction.locale, 'SETTINGS_MODAL_GUILD_INVITE_TITLE'),
+        "custom_id": `settings_guild-invite`,
+        "components": [{
+            "type": ComponentType.TextDisplay,
+            "content": localize(interaction.locale, 'SETTINGS_MODAL_GUILD_INVITE_DESCRIPTION')
+        }, {
+            "type": ComponentType.Label,
+            "label": localize(interaction.locale, 'SETTINGS_MODAL_GUILD_INVITE_LABEL'),
+            "component": {
+                "type": ComponentType.TextInput,
+                "style": TextInputStyle.Short,
+                "custom_id": `new-value`,
+                "required": true,
             }
         }]
     };

@@ -114,6 +114,7 @@ export const SlashCommand = {
             : fetchedSettings.thread_activity_level === ActivityLevel.High ? localize(interaction.locale, 'SETTINGS_ACTIVITY_LEVEL_HIGH')
             : localize(interaction.locale, 'SETTINGS_ACTIVITY_LEVEL_VERY_HIGH');
         let settingAllowStarboardReactions = fetchedSettings.allow_starboard_reactions ? localize(interaction.locale, 'SETTINGS_ALLOW_STARBOARD_REACTIONS_ENABLED') : localize(interaction.locale, 'SETTINGS_ALLOW_STARBOARD_REACTIONS_DISABLED');
+        let settingGuildInvite = fetchedSettings.guild_invite == null ? localize(interaction.locale, 'SETTINGS_GUILD_INVITE_NOT_SET') : `https://discord.gg/${fetchedSettings.guild_invite}`;
 
 
         // Construct components to display Settings Panel in
@@ -169,6 +170,20 @@ export const SlashCommand = {
                     "type": ComponentType.Button,
                     "style": ButtonStyle.Secondary,
                     "custom_id": `settings_starboard-reactions_${fetchedSettings.allow_starboard_reactions}`,
+                    "label": localize(interaction.locale, 'SETTINGS_PANEL_EDIT_BUTTON_LABEL'),
+                    "emoji": { "id": null, "name": "⚙" }
+                }
+            }, {
+                // Guild Invite Setting
+                "type": ComponentType.Section,
+                "components": [{
+                    "type": ComponentType.TextDisplay,
+                    "content": localize(interaction.locale, 'SETTINGS_PANEL_GUILD_INVITE_DESCRIPTION', settingGuildInvite)
+                }],
+                "accessory": {
+                    "type": ComponentType.Button,
+                    "style": ButtonStyle.Secondary,
+                    "custom_id": `settings_guild-invite_${fetchedSettings.guild_invite}`,
                     "label": localize(interaction.locale, 'SETTINGS_PANEL_EDIT_BUTTON_LABEL'),
                     "emoji": { "id": null, "name": "⚙" }
                 }
