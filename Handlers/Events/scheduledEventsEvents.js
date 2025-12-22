@@ -67,12 +67,22 @@ export async function processScheduledEventUserAdd(api, scheduledEvent) {
             : (guildConfig.thread_activity_level === ActivityLevel.VeryLow || guildConfig.thread_activity_level === ActivityLevel.Low) ? calculateIsoTimeFromNow('SEVEN_DAYS')
             : guildConfig.thread_activity_level === ActivityLevel.Medium ? calculateIsoTimeFromNow('FIVE_DAYS')
             : calculateIsoTimeFromNow('THREE_DAYS');
+
+        // Annoyingly fetch Event data since its understandablely not given in this specific API event
+        //   (PURELY so we don't accidentally spam Discord's API with GET requests when loading the Server's webpage on HomeCord)
+        let fetchEventData = await api.guilds.getScheduledEvent(scheduledEvent.guild_id, scheduledEvent.guild_scheduled_event_id);
     
         await ShowcasedEvent.create({
             guild_id: scheduledEvent.guild_id,
             event_id: scheduledEvent.guild_scheduled_event_id,
             showcase_type: ShowcaseType.Highlight,
-            showcase_expires_at: expiryTime
+            showcase_expires_at: expiryTime,
+            event_name: fetchEventData.name,
+            event_description: fetchEventData.description ?? null,
+            scheduled_start_time: fetchEventData.scheduled_start_time,
+            event_type: fetchEventData.entity_type,
+            event_external_location: fetchEventData.entity_metadata?.location ?? null,
+            event_cover_image: fetchEventData.image ?? null
         })
         .catch(console.error);
     }

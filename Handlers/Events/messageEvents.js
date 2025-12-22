@@ -333,7 +333,8 @@ export async function processMessageInThread(api, message, sourceChannel) {
                 thread_id: sourceChannel.id,
                 thread_type: sourceChannelParent.type === ChannelType.GuildText ? ThreadTypes.TextThread : sourceChannelParent.type === ChannelType.GuildAnnouncement ? ThreadTypes.NewsThread : ThreadTypes.ForumThread,
                 showcase_type: ShowcaseType.Highlight,
-                showcase_expires_at: expiryTime
+                showcase_expires_at: expiryTime,
+                thread_name: sourceChannel.name
             })
             .then(async () => {
                 // Remove from cache now that its highlighted

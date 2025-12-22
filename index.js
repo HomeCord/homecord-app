@@ -215,7 +215,7 @@ DiscordClient.on(GatewayDispatchEvents.GuildCreate, async ({ data: guildData, ap
     let timeSinceJoin = now - Date.parse(guildData.joined_at);
     if ( timeSinceJoin > 600000 ) { return; } // Not a new join
 
-    //if ( guildData.unavailable ) { return; } // Guild Data unavailable due to Discord API outage. SHouldn't be needed though since we only need the guildId here
+    //if ( guildData.unavailable ) { return; } // Guild Data unavailable due to Discord API outage. Shouldn't be needed though since we only need the guildId here
 
 
     // Setup Database entry
@@ -275,7 +275,7 @@ DiscordClient.on(GatewayDispatchEvents.GuildDelete, async ({ data: guildData, ap
 //  Discord Message Reaction Add Event
 DiscordClient.on(GatewayDispatchEvents.MessageReactionAdd, async ({ data: reactionData, api }) => {
     // Ensure HomeCord is enabled for this Server, AND that the Server has enabled HomeCord's Message Activity module
-    let fetchedGuildConfig = await GuildConfig.findOne({ guild_id: message.guild_id });
+    let fetchedGuildConfig = await GuildConfig.findOne({ guild_id: reactionData.guild_id });
     if ( fetchedGuildConfig == null ) { return; }
     if ( fetchedGuildConfig.is_homecord_enabled === false ) { return; }
     if ( fetchedGuildConfig.message_activity_level === ActivityLevel.Disabled ) { return; }
@@ -298,7 +298,7 @@ DiscordClient.on(GatewayDispatchEvents.MessageReactionAdd, async ({ data: reacti
 //  Discord Guild Scheduled Event User Add Event
 DiscordClient.on(GatewayDispatchEvents.GuildScheduledEventUserAdd, async ({ data: eventUserAddData, api }) => {
     // Ensure HomeCord is enabled for this Server, AND that the Server has enabled HomeCord's Event Activity module
-    let fetchedGuildConfig = await GuildConfig.findOne({ guild_id: message.guild_id });
+    let fetchedGuildConfig = await GuildConfig.findOne({ guild_id: eventUserAddData.guild_id });
     if ( fetchedGuildConfig == null ) { return; }
     if ( fetchedGuildConfig.is_homecord_enabled === false ) { return; }
     if ( fetchedGuildConfig.event_activity_level === ActivityLevel.Disabled ) { return; }
