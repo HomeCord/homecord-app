@@ -116,14 +116,6 @@ export const ContextCommand = {
             return;
         }
 
-        /* if ( fetchedGuildConfig.message_activity_level === ActivityLevel.Disabled ) {
-            await api.interactions.reply(interaction.id, interaction.token, {
-                flags: MessageFlags.Ephemeral,
-                content: localize(interaction.locale, 'FEATURE_MESSAGE_COMMAND_ERROR_MESSAGE_MODULE_DISABLED')
-            });
-            return;
-        } */
-
         // Block Forwards for the time being
         if ( sourceMessage.message_snapshots != undefined ) {
             await api.interactions.reply(interaction.id, interaction.token, {

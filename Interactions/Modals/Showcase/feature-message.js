@@ -3,8 +3,8 @@ import { ComponentType } from 'discord-api-types/v10';
 
 import { localize } from '../../../Utility/localizeResponses.js';
 import { calculateIsoTimeFromNow } from '../../../Utility/utilityMethods.js';
-import { ShowcasedAnnouncement, ShowcasedMessage } from '../../../Mongoose/Models.js';
-import { HomeCordLimits, ShowcaseType } from '../../../Utility/utilityConstants.js';
+import { GuildConfig, ShowcasedAnnouncement, ShowcasedMessage } from '../../../Mongoose/Models.js';
+import { ActivityLevel, HomeCordLimits, ShowcaseType } from '../../../Utility/utilityConstants.js';
 
 
 export const Modal = {
@@ -59,6 +59,16 @@ export const Modal = {
                     flags: MessageFlags.Ephemeral,
                     content: localize(interaction.locale, 'FEATURE_MESSAGE_COMMAND_ERROR_MAX_SHOWCASED_MESSAGES_HIT')
                 });
+            }
+
+            // AND ALSO that the module hasn't been disabled
+            let fetchedGuildConfig = await GuildConfig.findOne({ guild_id: interaction.guild_id });
+            if ( fetchedGuildConfig.message_activity_level === ActivityLevel.Disabled ) {
+                await api.interactions.reply(interaction.id, interaction.token, {
+                    flags: MessageFlags.Ephemeral,
+                    content: localize(interaction.locale, 'FEATURE_MESSAGE_COMMAND_ERROR_MESSAGE_MODULE_DISABLED')
+                });
+                return;
             }
 
             await ShowcasedMessage.create({
