@@ -89,6 +89,7 @@ export const Modal = {
                 });
 
                 if ( fetchInvite.status === 200 ) {
+                    /** @type {import('discord-api-types/v10').APIInvite} */
                     let resolveInviteData = await fetchInvite.json();
 
                     if ( resolveInviteData.guild_id == null ) {
@@ -103,7 +104,7 @@ export const Modal = {
                     }
                     else {
                         // Invite is for this Guild, so save to database
-                        await GuildConfig.updateOne({ guild_id: interaction.guild_id }, { guild_invite: `https://discord.gg/${resolveInviteData.code}` })
+                        await GuildConfig.updateOne({ guild_id: interaction.guild_id }, { guild_invite: resolveInviteData.code })
                         .then(async () => {
                             // ACK
                             await updateSettingsPanel(interaction, api);
@@ -204,7 +205,7 @@ async function updateSettingsPanel(interaction, api, inviteError) {
         : fetchedSettings.thread_activity_level === ActivityLevel.High ? localize(interaction.locale, 'SETTINGS_ACTIVITY_LEVEL_HIGH')
         : localize(interaction.locale, 'SETTINGS_ACTIVITY_LEVEL_VERY_HIGH');
     let settingAllowStarboardReactions = fetchedSettings.allow_starboard_reactions ? localize(interaction.locale, 'SETTINGS_ALLOW_STARBOARD_REACTIONS_ENABLED') : localize(interaction.locale, 'SETTINGS_ALLOW_STARBOARD_REACTIONS_DISABLED');
-    let settingGuildInvite = fetchedSettings.guild_invite == null ? localize(interaction.locale, 'SETTINGS_GUILD_INVITE_NOT_SET') : `https://discord.gg/${fetchedSettings.guild_invite}`;
+    let settingGuildInvite = fetchedSettings.guild_invite_code == null ? localize(interaction.locale, 'SETTINGS_GUILD_INVITE_NOT_SET') : `https://discord.gg/${fetchedSettings.guild_invite_code}`;
 
 
     // Construct components to display Settings Panel in
@@ -273,7 +274,7 @@ async function updateSettingsPanel(interaction, api, inviteError) {
             "accessory": {
                 "type": ComponentType.Button,
                 "style": ButtonStyle.Secondary,
-                "custom_id": `settings_guild-invite_${fetchedSettings.guild_invite}`,
+                "custom_id": `settings_guild-invite_${fetchedSettings.guild_invite_code}`,
                 "label": localize(interaction.locale, 'SETTINGS_PANEL_EDIT_BUTTON_LABEL'),
                 "emoji": { "id": null, "name": "⚙" }
             }
